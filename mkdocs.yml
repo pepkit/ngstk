@@ -1,0 +1,23 @@
+site_name: NGSTk
+site_url: http://code.databio.org/ngstk/
+repo_url: http://github.com/pepkit/ngstk
+pypi_name: ngstk
+
+nav:
+  - Introduction:
+    - Home: README.md
+  - Reference:
+    - API: autodoc_build/ngstk.md
+    - Support: support.md
+    - Contributing: contributing.md
+    - Changelog: changelog.md
+
+theme: databio
+
+plugins:
+  - databio:
+      autodoc_build: "docs/autodoc_build"
+      autodoc_package: "ngstk"
+      no_top_level: true
+  - search
+
