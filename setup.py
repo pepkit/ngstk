@@ -29,7 +29,7 @@ setup(
     name=PKG,
     packages=[PKG],
     version=version,
-    description="Various utility functions",
+    description="Next-generation sequencing utility functions",
     long_description=long_description,
     long_description_content_type='text/markdown', 
     classifiers=[
