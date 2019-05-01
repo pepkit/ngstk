@@ -1,0 +1,84 @@
+""" Functions related to file type """
+
+import os
+
+__author__ = "Vince Reuter"
+__email__ = "vreuter@virginia.edu"
+__credits = ["Nathan Sheffield", "Andre Rendeiro", "Vince Reuter"]
+
+
+__all__ = ["get_input_ext", "is_fastq", "is_gzipped_fastq", "is_sam_or_bam",
+           "is_unzipped_fastq", "UnsupportedFiletypeException"]
+
+
+def get_input_ext(input_file):
+    """
+    Get the extension of the input_file.
+
+    This function assumes you're using .bam, .fastq/.fq, or .fastq.gz/.fq.gz.
+
+    :param str input_file: name/path of file for which to get extension
+    :return str: standardized extension
+    :raise ubiquerg.ngs.UnsupportedFiletypeException: if the given file name
+        or path has an extension that's not supported
+    """
+    if input_file.endswith(".bam"):
+        return ".bam"
+    elif input_file.endswith(".fastq.gz") or input_file.endswith(".fq.gz"):
+        return ".fastq.gz"
+    elif input_file.endswith(".fastq") or input_file.endswith(".fq"):
+        return ".fastq"
+    errmsg = "'{}'; this pipeline can only deal with .bam, .fastq, " \
+             "or .fastq.gz files".format(input_file)
+    raise UnsupportedFiletypeException(errmsg)
+
+
+def is_fastq(file_name):
+    """
+    Determine whether indicated file appears to be in FASTQ format.
+
+    :param str file_name: Name/path of file to check as FASTQ.
+    :return bool: Whether indicated file appears to be in FASTQ format, zipped
+        or unzipped.
+    """
+    return is_unzipped_fastq(file_name) or is_gzipped_fastq(file_name)
+
+
+def is_gzipped_fastq(file_name):
+    """
+    Determine whether indicated file appears to be a gzipped FASTQ.
+
+    :param str file_name: Name/path of file to check as gzipped FASTQ.
+    :return bool: Whether indicated file appears to be in gzipped FASTQ format.
+    """
+    _, ext = os.path.splitext(file_name)
+    return file_name.endswith(".fastq.gz") or file_name.endswith(".fq.gz")
+
+
+def is_sam_or_bam(file_name):
+    """
+    Determine whether a file appears to be in a SAM format.
+
+    :param str file_name: Name/path of file to check as SAM-formatted.
+    :return bool: Whether file appears to be SAM-formatted
+    """
+    _, ext = os.path.splitext(file_name)
+    return ext in [".bam", ".sam"]
+
+
+def is_unzipped_fastq(file_name):
+    """
+    Determine whether indicated file appears to be an unzipped FASTQ.
+
+    :param str file_name: Name/path of file to check as unzipped FASTQ.
+    :return bool: Whether indicated file appears to be in unzipped FASTQ format.
+    """
+    _, ext = os.path.splitext(file_name)
+    return ext in [".fastq", ".fq"]
+
+
+class UnsupportedFiletypeException(Exception):
+    """ Restrict domain of file types. """
+    # Use superclass ctor to allow file name/path or extension to pass
+    # through as the message for why this error is occurring.
+    pass
