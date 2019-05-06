@@ -51,8 +51,8 @@ def is_gzipped_fastq(file_name):
     :param str file_name: Name/path of file to check as gzipped FASTQ.
     :return bool: Whether indicated file appears to be in gzipped FASTQ format.
     """
-    _, ext = os.path.splitext(file_name)
-    return file_name.endswith(".fastq.gz") or file_name.endswith(".fq.gz")
+    parts = file_name.split(".")
+    return parts[-2:] in [["fq", "gz"], ["fastq", "gz"]]
 
 
 def is_sam_or_bam(file_name):
