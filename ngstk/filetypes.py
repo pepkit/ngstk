@@ -8,7 +8,7 @@ __credits = ["Nathan Sheffield", "Andre Rendeiro", "Vince Reuter"]
 
 
 __all__ = ["get_input_ext", "is_fastq", "is_gzipped_fastq", "is_sam_or_bam",
-           "is_unzipped_fastq", "UnsupportedFiletypeException"]
+           "is_unzipped_fastq", "parse_ftype", "UnsupportedFiletypeException"]
 
 
 def get_input_ext(input_file):
@@ -51,8 +51,8 @@ def is_gzipped_fastq(file_name):
     :param str file_name: Name/path of file to check as gzipped FASTQ.
     :return bool: Whether indicated file appears to be in gzipped FASTQ format.
     """
-    _, ext = os.path.splitext(file_name)
-    return file_name.endswith(".fastq.gz") or file_name.endswith(".fq.gz")
+    parts = file_name.split(".")
+    return parts[-2:] in [["fq", "gz"], ["fastq", "gz"]]
 
 
 def is_sam_or_bam(file_name):
@@ -75,6 +75,28 @@ def is_unzipped_fastq(file_name):
     """
     _, ext = os.path.splitext(file_name)
     return ext in [".fastq", ".fq"]
+
+
+def parse_ftype(input_file):
+    """
+    Checks determine filetype from extension.
+
+    :param str input_file: String to check.
+    :return str: filetype (extension without dot prefix)
+    :raises UnsupportedFiletypeException: if file does not appear of a
+        supported type
+    """
+    if input_file.endswith(".bam"):
+        return "bam"
+    elif input_file.endswith(".fastq") or \
+            input_file.endswith(".fq") or \
+            input_file.endswith(".fq.gz") or \
+            input_file.endswith(".fastq.gz"):
+        return "fastq"
+    else:
+        raise UnsupportedFiletypeException(
+            "Input file extension is neither BAM- nor FASTQ-like: {}".
+            format(input_file))
 
 
 class UnsupportedFiletypeException(Exception):
