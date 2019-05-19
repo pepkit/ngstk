@@ -1,6 +1,7 @@
 """ File inspection functions """
 
 from collections import defaultdict, namedtuple
+import os
 import subprocess
 
 __author__ = "Vince Reuter"
